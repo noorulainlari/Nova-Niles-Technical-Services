@@ -1,0 +1,1 @@
+Add job dropdown with auto-fill salary and sync terms in Worker Offer Letter

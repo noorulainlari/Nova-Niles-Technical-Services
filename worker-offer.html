@@ -79,6 +79,15 @@
             width: 200px;
             font-weight: bold;
         }
+        select.input-field {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 2px 5px;
+            width: auto;
+            min-width: 200px;
+            background-color: #fff;
+            cursor: pointer;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -236,20 +245,36 @@
 
         <p>Dear Mr./Ms. <span id="candidate-name-display">[Candidate Name]</span>,</p>
 
-        <p>We are pleased to offer you employment with <strong>NOVA NILES TECHNICAL SERVICES</strong> in the position of <strong><input type="text" class="input-field" style="width: 150px;" placeholder="Job Title"></strong> under the following terms and conditions:</p>
+        <p>We are pleased to offer you employment with <strong>NOVA NILES TECHNICAL SERVICES</strong> in the position of 
+            <strong>
+                <select id="job-title-select" class="input-field" onchange="updateSalaryDetails()">
+                    <option value="">Select Job Title</option>
+                    <option value="Helper">Helper</option>
+                    <option value="Mason">Mason</option>
+                    <option value="Carpenter">Carpenter</option>
+                    <option value="Shuttering Carpenter">Shuttering Carpenter</option>
+                    <option value="Plumber">Plumber</option>
+                    <option value="Steel Fitter">Steel Fitter</option>
+                    <option value="Duct Man">Duct Man</option>
+                    <option value="Aluminium Fitters">Aluminium Fitters</option>
+                    <option value="Block Mason">Block Mason</option>
+                    <option value="Tile Mason">Tile Mason</option>
+                </select>
+            </strong> 
+            under the following terms and conditions:</p>
 
         <table>
             <tr>
                 <th>Basic Salary</th>
-                <td><input type="text" class="input-field" placeholder="e.g. 900"> AED</td>
+                <td><input type="text" id="basic-salary" class="input-field" readonly> AED</td>
             </tr>
             <tr>
                 <th>Allowances</th>
-                <td><input type="text" class="input-field" placeholder="e.g. 200"> AED</td>
+                <td><input type="text" id="allowance" class="input-field" readonly> AED</td>
             </tr>
             <tr>
                 <th>Total Monthly Salary</th>
-                <td><input type="text" class="input-field" placeholder="e.g. 1100"> AED</td>
+                <td><input type="text" id="total-salary" class="input-field" readonly> AED</td>
             </tr>
         </table>
 
@@ -300,6 +325,7 @@
         </div>
         <div class="signature-box">
             <p><strong>Employee Signature</strong><br>I accept this offer</p>
+            <input type="text" class="input-field" placeholder="Worker Name" style="width: 100%; text-align: center; margin-bottom: 5px;">
             <div class="signature-pad-container">
                 <canvas id="signature-pad" width="200" height="100"></canvas>
                 <div class="signature-actions">
@@ -330,6 +356,34 @@
             candidateNameDisplay.textContent = this.value || (isArabic ? "[اسم المرشح]" : "[Candidate Name]");
         });
 
+        const salaryData = {
+            "Helper": { basic: 900, allowance: 200, total: 1100 },
+            "Mason": { basic: 1100, allowance: 200, total: 1300 },
+            "Carpenter": { basic: 1100, allowance: 200, total: 1300 },
+            "Shuttering Carpenter": { basic: 1100, allowance: 200, total: 1300 },
+            "Plumber": { basic: 1100, allowance: 200, total: 1300 },
+            "Steel Fitter": { basic: 1100, allowance: 200, total: 1300 },
+            "Duct Man": { basic: 1100, allowance: 200, total: 1300 },
+            "Aluminium Fitters": { basic: 1100, allowance: 200, total: 1300 },
+            "Block Mason": { basic: 1100, allowance: 200, total: 1300 },
+            "Tile Mason": { basic: 1100, allowance: 200, total: 1300 }
+        };
+
+        function updateSalaryDetails() {
+            const jobSelect = document.getElementById('job-title-select');
+            const selectedJob = jobSelect.value;
+            
+            if (salaryData[selectedJob]) {
+                document.getElementById('basic-salary').value = salaryData[selectedJob].basic;
+                document.getElementById('allowance').value = salaryData[selectedJob].allowance;
+                document.getElementById('total-salary').value = salaryData[selectedJob].total;
+            } else {
+                document.getElementById('basic-salary').value = "";
+                document.getElementById('allowance').value = "";
+                document.getElementById('total-salary').value = "";
+            }
+        }
+
         // Language Toggle Logic
         let isArabic = false;
         const translations = {
@@ -342,6 +396,19 @@
                 dear: "Dear Mr./Ms. ",
                 bodyStart: "We are pleased to offer you employment with <strong>NOVA NILES TECHNICAL SERVICES</strong> in the position of ",
                 bodyEnd: " under the following terms and conditions:",
+                jobTitles: {
+                    "Select Job Title": "Select Job Title",
+                    "Helper": "Helper",
+                    "Mason": "Mason",
+                    "Carpenter": "Carpenter",
+                    "Shuttering Carpenter": "Shuttering Carpenter",
+                    "Plumber": "Plumber",
+                    "Steel Fitter": "Steel Fitter",
+                    "Duct Man": "Duct Man",
+                    "Aluminium Fitters": "Aluminium Fitters",
+                    "Block Mason": "Block Mason",
+                    "Tile Mason": "Tile Mason"
+                },
                 table: {
                     basic: "Basic Salary",
                     allowance: "Allowances",
@@ -351,18 +418,21 @@
                 terms: [
                     "<strong>Contract Period:</strong> 2 (Two) Years, renewable upon mutual agreement.",
                     "<strong>Working Hours:</strong> 9 hours per day (including 1 hour break).",
-                    "<strong>Overtime:</strong> As per UAE Labor Law.",
-                    "<strong>Probation Period:</strong> 6 Months.",
-                    "<strong>Accommodation & Transport:</strong> Provided by the company.",
-                    "<strong>Medical Insurance:</strong> Provided by the company.",
-                    "<strong>Leave & Ticket:</strong> Every 2 years with return ticket.",
-                    "<strong>Notice Period:</strong> 30 Days as per UAE Law."
+                    "<strong>Overtime:</strong> Any work performed beyond normal working hours will be paid as overtime as per UAE Labor Law.",
+                    "<strong>Kitchen Facility:</strong> Provided by the company.",
+                    "<strong>Salary Hold:</strong> 40 days salary will be held as a security deposit and refunded upon successful completion of the two-year contract.",
+                    "<strong>Accommodation:</strong> Provided by the company.",
+                    "<strong>Transportation:</strong> Provided by the company (from accommodation to work site and back).",
+                    "<strong>Medical / Insurance:</strong> Provided by the company as per UAE Labor Law.",
+                    "<strong>Air Passage:</strong> Return air ticket provided after completion of 2 years contract.",
+                    "<strong>Other Benefits:</strong> As per UAE Labor Law."
                 ],
                 companyName: "NOVA NILES TECHNICAL SERVICES",
                 companyNameAr: "نوفا نايلز للخدمات الفنية",
                 forBehalf: "For and on behalf of",
                 empSig: "Employee Signature",
                 accept: "I accept this offer",
+                workerNamePlaceholder: "Worker Name",
                 clearBtn: "Clear Signature",
                 footerNote: "Scan to Verify Offer Authenticity",
                 placeholders: {
@@ -385,6 +455,19 @@
                 dear: "عزيزي السيد / السيدة ",
                 bodyStart: "يسرنا أن نعرض عليك العمل مع <strong>نوفا نايلز للخدمات الفنية</strong> في وظيفة ",
                 bodyEnd: " وفقاً للشروط والأحكام التالية:",
+                jobTitles: {
+                    "Select Job Title": "اختر المسمى الوظيفي",
+                    "Helper": "مساعد",
+                    "Mason": "بناء",
+                    "Carpenter": "نجار",
+                    "Shuttering Carpenter": "نجار طوبار",
+                    "Plumber": "سباك",
+                    "Steel Fitter": "حداد مسلح",
+                    "Duct Man": "فني تكييف (دكت)",
+                    "Aluminium Fitters": "فني ألمنيوم",
+                    "Block Mason": "بناء طوب",
+                    "Tile Mason": "مبلط"
+                },
                 table: {
                     basic: "الراتب الأساسي",
                     allowance: "البدلات",
@@ -394,18 +477,21 @@
                 terms: [
                     "<strong>مدة العقد:</strong> سنتان (2)، قابلة للتجديد بموافقة الطرفين.",
                     "<strong>ساعات العمل:</strong> 9 ساعات يومياً (شاملة ساعة استراحة).",
-                    "<strong>العمل الإضافي:</strong> وفقاً لقانون العمل الإماراتي.",
-                    "<strong>فترة التجربة:</strong> 6 أشهر.",
-                    "<strong>السكن والمواصلات:</strong> توفرها الشركة.",
-                    "<strong>التأمين الطبي:</strong> توفره الشركة.",
-                    "<strong>الإجازة والتذكرة:</strong> كل سنتين مع تذكرة عودة.",
-                    "<strong>فترة الإشعار:</strong> 30 يوماً وفقاً لقانون العمل الإماراتي."
+                    "<strong>العمل الإضافي:</strong> أي عمل يتم تأديته خارج ساعات العمل الرسمية سيتم دفع أجره كعمل إضافي وفقاً لقانون العمل الإماراتي.",
+                    "<strong>مرفق المطبخ:</strong> توفره الشركة.",
+                    "<strong>حجز الراتب:</strong> سيتم حجز راتب 40 يوماً كتأمين وسيتم إعادته عند الانتهاء بنجاح من عقد السنتين.",
+                    "<strong>السكن:</strong> توفره الشركة.",
+                    "<strong>المواصلات:</strong> توفرها الشركة.",
+                    "<strong>التأمين الطبي:</strong> توفره الشركة وفقاً لقانون العمل الإماراتي.",
+                    "<strong>تذكرة السفر:</strong> تذكرة عودة توفر بعد إكمال عقد السنتين.",
+                    "<strong>مزايا أخرى:</strong> وفقاً لقانون العمل الإماراتي."
                 ],
                 companyName: "NOVA NILES TECHNICAL SERVICES",
                 companyNameAr: "نوفا نايلز للخدمات الفنية",
                 forBehalf: "عن وبالنيابة عن",
                 empSig: "توقيع الموظف",
                 accept: "أوافق على هذا العرض",
+                workerNamePlaceholder: "اسم العامل",
                 clearBtn: "مسح التوقيع",
                 footerNote: "امسح للتحقق من صحة العرض",
                 placeholders: {
@@ -453,12 +539,30 @@
             }
 
             // Complex body replacement while preserving input
-            const jobInput = document.querySelector('input[placeholder="Job Title"]');
+            const jobSelect = document.getElementById('job-title-select');
+            const selectedJob = jobSelect.value;
             const p2 = bodyPs[1];
-            p2.innerHTML = t.bodyStart + '<strong><input type="text" class="input-field" style="width: 150px;" placeholder="' + t.placeholders.job + '"></strong>' + t.bodyEnd;
-            // Restore input value
-            const newJobInput = p2.querySelector('input');
-            newJobInput.value = jobInput.value;
+
+            // Rebuild the paragraph content with the select element
+            p2.innerHTML = t.bodyStart + '<strong><select id="job-title-select" class="input-field" onchange="updateSalaryDetails()"></select></strong>' + t.bodyEnd;
+
+            // Re-populate the select options based on language
+            const newJobSelect = document.getElementById('job-title-select');
+            
+            // Map English keys to current translation values
+            // We need to keep the original values (English keys) for logic but show translated text
+            const englishKeys = ["Select Job Title", "Helper", "Mason", "Carpenter", "Shuttering Carpenter", "Plumber", "Steel Fitter", "Duct Man", "Aluminium Fitters", "Block Mason", "Tile Mason"];
+            
+            englishKeys.forEach(key => {
+                const option = document.createElement('option');
+                // The value should always be the English key so updateSalaryDetails() works
+                option.value = key === "Select Job Title" ? "" : key;
+                option.text = t.jobTitles[key];
+                newJobSelect.appendChild(option);
+            });
+
+            // Restore selected value
+            newJobSelect.value = selectedJob;
 
             // Table
             const ths = document.querySelectorAll('table th');
@@ -486,6 +590,9 @@
             // Employee Sig
             const empSigP = sigBoxes[1].querySelector('p');
             empSigP.innerHTML = '<strong>' + t.empSig + '</strong><br>' + t.accept;
+            
+            // Worker Name Input
+            sigBoxes[1].querySelector('input').placeholder = t.workerNamePlaceholder;
             
             document.querySelector('.clear-btn').textContent = t.clearBtn;
             document.querySelector('.footer-note p:last-child').textContent = t.footerNote;
