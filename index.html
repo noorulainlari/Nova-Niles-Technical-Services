@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1024">
     <title>Job Demand Letter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
             font-family: "Times New Roman", serif;
@@ -15,6 +16,10 @@
             margin-left: auto;
             margin-right: auto;
             position: relative;
+        }
+        body.rtl {
+            direction: rtl;
+            font-family: "Traditional Arabic", "Times New Roman", serif;
         }
         /* Watermark */
         .watermark {
@@ -132,6 +137,19 @@
             background-color: #45a049;
         }
         
+        .lang-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: #102580;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
         /* Signature Pad Styles */
         .signature-pad-container {
             border: 1px dashed #ccc;
@@ -167,14 +185,29 @@
             font-weight: bold;
         }
 
+        .ref-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .qr-code-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .qr-code-container p {
+            font-size: 10px;
+            margin-top: 5px;
+            color: #555;
+        }
         @media print {
             body {
                 padding: 0;
                 max-width: 100%;
             }
-            .no-print, .print-btn, .signature-actions, .signature-pad-container {
-                border: none; 
-                background: none;
+            .no-print, .print-btn, .lang-btn, .signature-actions, .signature-pad-container {
+                display: none;
             }
             .signature-pad-container {
                 border: none;
@@ -199,14 +232,16 @@
     <!-- Watermark Background -->
     <img src="logo.svg" alt="Watermark" class="watermark">
 
+    <button onclick="toggleLanguage()" class="lang-btn no-print">عربي / English</button>
     <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
 
     <div class="header" contenteditable="true">
-        <!-- Optional: Header Logo (uncomment if needed, or user can drag/drop) -->
-        <!-- <img src="logo.svg" class="header-logo"> -->
-        <h1>Nova Niles Technical Services</h1>
-        <p>Dubai - UAE</p>
-        <p>Email: info.novaniles-TS@gmail.com, ksbpstech@gmail.com</p>
+        <div class="ref-number">Ref: NNTS/DL/<span id="ref-id">2024-001</span></div>
+        <img src="logo.svg" alt="Nova Niles Logo" class="header-logo">
+        <h1>DEMAND LETTER</h1>
+        <p><strong>NOVA NILES TECHNICAL SERVICES</strong></p>
+        <p>P.O. Box: 12345, Dubai - UAE</p>
+        <p>Email: info.novaniles-TS@gmail.com | ksbpstech@gmail.com</p>
     </div>
 
     <div class="content">
@@ -336,22 +371,18 @@
                 <circle cx="150" cy="150" r="105" stroke="#102580" stroke-width="2" fill="none" />
                 
                 <!-- English Company Name (Top) -->
-                <text fill="#102580" font-family="Arial, sans-serif" font-weight="bold" font-size="28" letter-spacing="1">
+                <text fill="#102580" font-family="Arial, sans-serif" font-weight="bold" font-size="22">
                   <textPath xlink:href="#circlePath" startOffset="50%" text-anchor="middle" side="left">
                     NOVA NILES TECHNICAL SERVICES
                   </textPath>
                 </text>
                 
                 <!-- Arabic Company Name (Bottom) -->
-                <text fill="#102580" font-family="Arial, sans-serif" font-weight="bold" font-size="30" letter-spacing="1">
+                <text fill="#102580" font-family="Arial, sans-serif" font-weight="bold" font-size="24">
                   <textPath xlink:href="#bottomCirclePath" startOffset="50%" text-anchor="middle" side="right">
                     نوفا نايلز للخدمات الفنية
                   </textPath>
                 </text>
-                
-                <!-- Stars to fill gaps -->
-                <text x="25" y="155" font-size="24" fill="#102580" font-weight="bold" text-anchor="middle">★</text>
-                <text x="275" y="155" font-size="24" fill="#102580" font-weight="bold" text-anchor="middle">★</text>
 
                 <g transform="translate(150, 150)">
                   <text y="-25" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="36" fill="#102580">NN</text>
@@ -379,74 +410,143 @@
         </div>
     </div>
 
+    <div class="footer-note" style="text-align: center; margin-top: 40px; font-size: 12px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <p>Please sign, print, and email this document to: <strong>info.novaniles-TS@gmail.com, ksbpstech@gmail.com</strong></p>
+        <div id="qrcode" class="qr-code-container"></div>
+        <p class="qr-code-container">Scan to Verify Document Authenticity</p>
+    </div>
+
     <script>
         // Set current date
         const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', dateOptions);
 
-        // Signature Pad Logic
-        const canvas = document.getElementById('signature-pad');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let lastX = 0;
-        let lastY = 0;
+        // Generate unique reference ID based on timestamp
+        const refId = 'DL-' + Date.now().toString().slice(-6);
+        document.getElementById('ref-id').textContent = refId;
 
-        function draw(e) {
-            if (!isDrawing) return;
-            
-            // Get correct coordinates for both mouse and touch
-            let clientX, clientY;
-            if(e.type.includes('touch')) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-
-            const rect = canvas.getBoundingClientRect();
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            
-            lastX = x;
-            lastY = y;
-        }
-
-        canvas.addEventListener('mousedown', (e) => {
-            isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            lastX = e.clientX - rect.left;
-            lastY = e.clientY - rect.top;
+        // Generate QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: "Verified Document: " + refId + " | Nova Niles Technical Services",
+            width: 80,
+            height: 80,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
         });
-
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
-        canvas.addEventListener('mouseout', () => isDrawing = false);
-
-        // Touch support
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            lastX = touch.clientX - rect.left;
-            lastY = touch.clientY - rect.top;
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); 
-            draw(e);
-        }, { passive: false });
         
-        canvas.addEventListener('touchend', () => isDrawing = false);
+        // Language Toggle Logic
+        let isArabic = false;
+        const translations = {
+            en: {
+                title: "DEMAND LETTER",
+                to: "The Manager / Recruitment Agency",
+                date: "Date:",
+                subject: "Subject: DEMAND LETTER FOR RECRUITMENT OF WORKERS FROM PAKISTAN",
+                body: "Dear Sir/Madam,<br><br>We, <strong>NOVA NILES TECHNICAL SERVICES</strong>, organized under the laws of Dubai, UAE, hereby appoint your agency to recruit the following personnel for employment with our company in the United Arab Emirates. We authorize you to handle all formalities related to the selection and deployment of these workers.",
+                table: {
+                    sn: "S.N.",
+                    category: "Job Category",
+                    qty: "Quantity",
+                    salary: "Monthly Salary (AED)"
+                },
+                termsTitle: "Terms and Conditions:",
+                terms: [
+                    "<strong>Contract Period:</strong> 2 (Two) Years, renewable upon mutual agreement.",
+                    "<strong>Working Hours:</strong> 9 hours per day (including 1 hour break).",
+                    "<strong>Overtime:</strong> Any work performed beyond normal working hours will be paid as overtime as per UAE Labor Law.",
+                    "<strong>Kitchen Facility:</strong> Provided by the company.",
+                    "<strong>Salary Hold:</strong> 40 days salary will be held as a security deposit and refunded upon successful completion of the two-year contract.",
+                    "<strong>Accommodation:</strong> Provided by the company.",
+                    "<strong>Transportation:</strong> Provided by the company.",
+                    "<strong>Medical / Insurance:</strong> Provided by the company as per UAE Labor Law.",
+                    "<strong>Air Passage:</strong> Return air ticket provided after completion of 2 years contract.",
+                    "<strong>Other Benefits:</strong> As per UAE Labor Law."
+                ],
+                acceptedBy: "Accepted by",
+                placeholder: "Type Agency Name Here",
+                authSign: "Authorized Signatory",
+                signName: "(Name & Seal)",
+                forBehalf: "For and on behalf of",
+                clearBtn: "Clear Signature",
+                footerNote: "Please sign, print, and email this document to:"
+            },
+            ar: {
+                title: "رسالة طلب عمالة",
+                to: "المدير / وكالة التوظيف",
+                date: "التاريخ:",
+                subject: "الموضوع: رسالة طلب توظيف عمال من باكستان",
+                body: "عزيزي السيد / السيدة،<br><br>نحن، <strong>نوفا نايلز للخدمات الفنية</strong>، المنظمة بموجب قوانين دبي، الإمارات العربية المتحدة، نعين وكالتكم لتوظيف الموظفين التالية أسماؤهم للعمل مع شركتنا في الإمارات العربية المتحدة. نفوضكم بإنهاء جميع الإجراءات المتعلقة باختيار ونشر هؤلاء العمال.",
+                table: {
+                    sn: "ت",
+                    category: "المسمى الوظيفي",
+                    qty: "العدد",
+                    salary: "الراتب الشهري (درهم)"
+                },
+                termsTitle: "الشروط والأحكام:",
+                terms: [
+                    "<strong>مدة العقد:</strong> سنتان (2)، قابلة للتجديد بموافقة الطرفين.",
+                    "<strong>ساعات العمل:</strong> 9 ساعات يومياً (شاملة ساعة استراحة).",
+                    "<strong>العمل الإضافي:</strong> أي عمل يتم تأديته خارج ساعات العمل الرسمية سيتم دفع أجره كعمل إضافي وفقاً لقانون العمل الإماراتي.",
+                    "<strong>مرفق المطبخ:</strong> توفره الشركة.",
+                    "<strong>حجز الراتب:</strong> سيتم حجز راتب 40 يوماً كتأمين وسيتم إعادته عند الانتهاء بنجاح من عقد السنتين.",
+                    "<strong>السكن:</strong> توفره الشركة.",
+                    "<strong>المواصلات:</strong> توفرها الشركة.",
+                    "<strong>التأمين الطبي:</strong> توفره الشركة وفقاً لقانون العمل الإماراتي.",
+                    "<strong>تذكرة السفر:</strong> تذكرة عودة توفر بعد إكمال عقد السنتين.",
+                    "<strong>مزايا أخرى:</strong> وفقاً لقانون العمل الإماراتي."
+                ],
+                acceptedBy: "قبلت من قبل",
+                placeholder: "اكتب اسم الوكالة هنا",
+                authSign: "المفوض بالتوقيع",
+                signName: "(الاسم والختم)",
+                forBehalf: "عن وبالنيابة عن",
+                clearBtn: "مسح التوقيع",
+                footerNote: "يرجى التوقيع والطباعة وإرسال هذا المستند عبر البريد الإلكتروني إلى:"
+            }
+        };
 
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function toggleLanguage() {
+            isArabic = !isArabic;
+            const lang = isArabic ? 'ar' : 'en';
+            const t = translations[lang];
+            
+            document.body.className = isArabic ? 'rtl' : '';
+            document.querySelector('.lang-btn').textContent = isArabic ? 'English / عربي' : 'عربي / English';
+            
+            // Header
+            document.querySelector('.header h1').textContent = t.title;
+            
+            // Content
+            document.querySelector('.recipient-info p:first-child strong').textContent = t.date;
+            document.querySelector('.recipient-info p:nth-child(2) strong').textContent = t.to;
+            document.querySelector('.subject').textContent = t.subject;
+            document.querySelector('.content > p').innerHTML = t.body;
+            
+            // Table
+            const ths = document.querySelectorAll('table th');
+            ths[0].textContent = t.table.sn;
+            ths[1].textContent = t.table.category;
+            ths[2].textContent = t.table.qty;
+            ths[3].textContent = t.table.salary;
+            
+            // Terms
+            document.querySelector('.terms h3').textContent = t.termsTitle;
+            const lis = document.querySelectorAll('.terms li');
+            t.terms.forEach((term, index) => {
+                if(lis[index]) lis[index].innerHTML = term;
+            });
+            
+            // Footer
+            document.querySelector('.signature-box p:first-child').childNodes[0].nodeValue = t.acceptedBy;
+            document.querySelector('.agency-input').placeholder = t.placeholder;
+            document.querySelector('.clear-btn').textContent = t.clearBtn;
+            
+            const companySig = document.querySelectorAll('.signature-box')[1];
+            companySig.querySelector('p:first-child').childNodes[0].nodeValue = t.forBehalf;
+            
+            // Footer Note
+            document.querySelector('.footer-note p strong').previousSibling.nodeValue = t.footerNote + " ";
         }
     </script>
 
