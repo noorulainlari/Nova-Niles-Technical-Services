@@ -34,27 +34,27 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 20px;
-            position: relative;
+            margin-bottom: 20px;
         }
-        /* Header Logo */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
         .header-logo {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 80px;
+            width: 100px;
             height: auto;
         }
         .header h1 {
-            margin: 0;
-            text-transform: uppercase;
             font-size: 24px;
-            margin-top: 10px;
+            text-decoration: underline;
+            margin: 10px 0;
+            text-transform: uppercase;
+            clear: both;
         }
         .header p {
-            margin: 5px 0;
+            margin: 2px 0;
             font-size: 14px;
         }
         .content {
@@ -186,11 +186,9 @@
         }
 
         .ref-number {
-            position: absolute;
-            top: 20px;
-            left: 20px;
             font-size: 14px;
             font-weight: bold;
+            text-align: left;
         }
         .qr-code-container {
             text-align: center;
@@ -236,8 +234,10 @@
     <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
 
     <div class="header" contenteditable="true">
-        <div class="ref-number">Ref: NNTS/DL/<span id="ref-id">2024-001</span></div>
-        <img src="logo.svg" alt="Nova Niles Logo" class="header-logo">
+        <div class="header-top">
+            <div class="ref-number">Ref: NNTS/DL/<span id="ref-id">2024-001</span></div>
+            <img src="logo.svg" alt="Nova Niles Logo" class="header-logo">
+        </div>
         <h1>DEMAND LETTER</h1>
         <p><strong>NOVA NILES TECHNICAL SERVICES</strong></p>
         <p>P.O. Box: 12345, Dubai - UAE</p>
@@ -255,9 +255,10 @@
 
         <p class="subject" contenteditable="true">SUBJECT: DEMAND LETTER FOR RECRUITMENT OF WORKERS</p>
 
-        <p contenteditable="true">Dear Sir/Madam,</p>
-
-        <p contenteditable="true">We, <strong>Nova Niles Technical Services</strong>, organized under the laws of the United Arab Emirates, hereby appoint your agency to recruit the following personnel for employment with our company in the UAE, under the following terms and conditions:</p>
+        <div id="letter-body" contenteditable="true">
+            <p>Dear Sir/Madam,</p>
+            <p>We, <strong>Nova Niles Technical Services</strong>, organized under the laws of the United Arab Emirates, hereby appoint your agency to recruit the following personnel for employment with our company in the UAE, under the following terms and conditions:</p>
+        </div>
 
         <table contenteditable="true">
             <thead>
@@ -521,7 +522,7 @@
             document.querySelector('.recipient-info p:first-child strong').textContent = t.date;
             document.querySelector('.recipient-info p:nth-child(2) strong').textContent = t.to;
             document.querySelector('.subject').textContent = t.subject;
-            document.querySelector('.content > p').innerHTML = t.body;
+            document.getElementById('letter-body').innerHTML = t.body;
             
             // Table
             const ths = document.querySelectorAll('table th');

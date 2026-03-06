@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024">
+    <title>Worker Employment Offer Letter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: "Times New Roman", serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .header-logo {
+            width: 100px;
+            height: auto;
+        }
+        .header h1 {
+            font-size: 24px;
+            text-decoration: underline;
+            margin: 10px 0;
+            text-transform: uppercase;
+            clear: both;
+        }
+        .header p {
+            margin: 2px 0;
+            font-size: 14px;
+        }
+        .ref-number {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .candidate-info {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .candidate-info p {
+            margin: 5px 0;
+        }
+        .input-field {
+            border: none;
+            border-bottom: 1px dashed #000;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            width: 200px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .terms {
+            margin-top: 20px;
+        }
+        .terms ol {
+            padding-left: 20px;
+        }
+        .terms li {
+            margin-bottom: 5px;
+        }
+        .footer {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-box {
+            text-align: center;
+            position: relative;
+            min-width: 200px;
+        }
+        .signature-line {
+            margin-top: 60px;
+            border-top: 1px solid #000;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Stamp */
+        .stamp-img {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            width: 140px;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .print-btn:hover {
+            background-color: #45a049;
+        }
+        
+        /* Signature Pad Styles */
+        .signature-pad-container {
+            border: 1px dashed #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            cursor: crosshair;
+        }
+        .signature-actions {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .clear-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .qr-code-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .qr-code-container p {
+            font-size: 10px;
+            margin-top: 5px;
+            color: #555;
+        }
+        @media print {
+            body { padding: 0; max-width: 100%; }
+            .no-print, .print-btn, .signature-actions, .signature-pad-container { display: none; }
+            .signature-pad-container { border: none; background: none; padding: 0; }
+            canvas { border: none; }
+            .clear-btn { display: none; }
+            .input-field { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+    <img src="logo.svg" alt="Watermark" class="watermark">
+    <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+
+    <div class="header">
+        <div class="header-top">
+            <div class="ref-number">Ref: NNTS/OL/<span id="ref-id">2024-W001</span></div>
+            <img src="logo.svg" alt="Nova Niles Logo" class="header-logo">
+        </div>
+        <h1>EMPLOYMENT OFFER LETTER</h1>
+        <p><strong>NOVA NILES TECHNICAL SERVICES</strong></p>
+        <p>P.O. Box: 12345, Dubai - UAE</p>
+    </div>
+
+    <div class="content">
+        <div class="candidate-info">
+            <p><strong>Date:</strong> <span id="current-date"></span></p>
+            <p><strong>Employee Name:</strong> <input type="text" class="input-field" placeholder="Enter Name"></p>
+            <p><strong>Passport No:</strong> <input type="text" class="input-field" placeholder="Enter Passport No"></p>
+            <p><strong>Nationality:</strong> <input type="text" class="input-field" placeholder="Enter Nationality"></p>
+        </div>
+
+        <p>Dear Mr./Ms. <span id="candidate-name-display">[Candidate Name]</span>,</p>
+
+        <p>We are pleased to offer you employment with <strong>NOVA NILES TECHNICAL SERVICES</strong> in the position of <strong><input type="text" class="input-field" style="width: 150px;" placeholder="Job Title"></strong> under the following terms and conditions:</p>
+
+        <table>
+            <tr>
+                <th>Basic Salary</th>
+                <td><input type="text" class="input-field" placeholder="e.g. 900"> AED</td>
+            </tr>
+            <tr>
+                <th>Allowances</th>
+                <td><input type="text" class="input-field" placeholder="e.g. 200"> AED</td>
+            </tr>
+            <tr>
+                <th>Total Monthly Salary</th>
+                <td><input type="text" class="input-field" placeholder="e.g. 1100"> AED</td>
+            </tr>
+        </table>
+
+        <div class="terms">
+            <h3>Terms and Conditions:</h3>
+            <ol>
+                <li><strong>Contract Period:</strong> 2 (Two) Years, renewable upon mutual agreement.</li>
+                <li><strong>Working Hours:</strong> 9 hours per day (including 1 hour break).</li>
+                <li><strong>Overtime:</strong> As per UAE Labor Law.</li>
+                <li><strong>Probation Period:</strong> 6 Months.</li>
+                <li><strong>Accommodation & Transport:</strong> Provided by the company.</li>
+                <li><strong>Medical Insurance:</strong> Provided by the company.</li>
+                <li><strong>Leave & Ticket:</strong> Every 2 years with return ticket.</li>
+                <li><strong>Notice Period:</strong> 30 Days as per UAE Law.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="signature-box">
+             <!-- Stamp Image (Inline SVG) -->
+              <svg class="stamp-img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 300 300">
+                <defs>
+                  <path id="circlePath" d="M 25, 150 a 125,125 0 1,1 250,0" />
+                  <path id="bottomCirclePath" d="M 25, 150 a 125,125 0 0,0 250,0" />
+                </defs>
+                <circle cx="150" cy="150" r="145" stroke="#102580" stroke-width="4" fill="none" />
+                <circle cx="150" cy="150" r="105" stroke="#102580" stroke-width="2" fill="none" />
+                <text fill="#102580" font-family="Arial, sans-serif" font-weight="bold" font-size="22">
+                  <textPath xlink:href="#circlePath" startOffset="50%" text-anchor="middle" side="left">
+                    NOVA NILES TECHNICAL SERVICES
+                  </textPath>
+                </text>
+                <text fill="#102580" font-family="Arial, sans-serif" font-weight="bold" font-size="24">
+                  <textPath xlink:href="#bottomCirclePath" startOffset="50%" text-anchor="middle" side="right">
+                    نوفا نايلز للخدمات الفنية
+                  </textPath>
+                </text>
+                <g transform="translate(150, 150)">
+                  <text y="-25" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="36" fill="#102580">NN</text>
+                  <text y="5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#102580">AUTHORIZED</text>
+                  <text y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#102580">SIGNATORY</text>
+                  <text y="45" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="14" fill="#102580">DUBAI - U.A.E.</text>
+                </g>
+              </svg>
+             <p style="margin-top: 80px;">For and on behalf of<br><strong>Nova Niles Technical Services</strong></p>
+            <div class="signature-line"></div>
+        </div>
+        <div class="signature-box">
+            <p><strong>Employee Signature</strong><br>I accept this offer</p>
+            <div class="signature-pad-container">
+                <canvas id="signature-pad" width="200" height="100"></canvas>
+                <div class="signature-actions">
+                    <button class="clear-btn" onclick="clearSignature()">Clear Signature</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note" style="text-align: center; margin-top: 40px; font-size: 12px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <div id="qrcode" class="qr-code-container"></div>
+        <p class="qr-code-container">Scan to Verify Offer Authenticity</p>
+    </div>
+
+    <script>
+        // Set date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // Ref ID
+        const refId = 'OL-' + Date.now().toString().slice(-6);
+        document.getElementById('ref-id').textContent = refId;
+
+        // Update candidate name in body
+        const nameInput = document.querySelector('.candidate-info input[placeholder="Enter Name"]');
+        nameInput.addEventListener('input', function() {
+            document.getElementById('candidate-name-display').textContent = this.value || "[Candidate Name]";
+        });
+
+        // Signature Pad
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function draw(e) {
+            if (!isDrawing) return;
+            let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            lastX = x; lastY = y;
+        }
+
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; const rect = canvas.getBoundingClientRect(); lastX = e.clientX - rect.left; lastY = e.clientY - rect.top; });
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const rect = canvas.getBoundingClientRect(); lastX = e.touches[0].clientX - rect.left; lastY = e.touches[0].clientY - rect.top; }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+
+        function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        // QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: "Offer Letter Ref: " + refId + " | Nova Niles Technical Services",
+            width: 80, height: 80
+        });
+    </script>
+</body>
+</html>
