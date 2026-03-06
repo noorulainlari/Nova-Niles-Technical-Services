@@ -223,7 +223,7 @@
         <button onclick="window.location.href='index.html'" class="nav-btn">&larr; Demand Letter</button>
         <button onclick="toggleLanguage()" class="lang-btn">عربي / English</button>
     </div>
-    <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
+    <button class="print-btn no-print" onclick="validateAndPrint()">Print / Save as PDF</button>
 
     <div class="header">
         <div class="header-top">
@@ -381,6 +381,37 @@
                 document.getElementById('basic-salary').value = "";
                 document.getElementById('allowance').value = "";
                 document.getElementById('total-salary').value = "";
+            }
+        }
+
+        function validateAndPrint() {
+            // Get all input fields
+            const name = document.querySelector('.candidate-info input[placeholder="Enter Name"]').value.trim();
+            const passport = document.querySelector('.candidate-info input[placeholder="Enter Passport No"]').value.trim();
+            const nationality = document.querySelector('.candidate-info input[placeholder="Enter Nationality"]').value.trim();
+            const jobTitle = document.getElementById('job-title-select').value;
+            const workerName = document.querySelector('.signature-box input[placeholder="Worker Name"]').value.trim();
+            
+            // Check if signature pad is empty (this is a basic check, advanced check requires checking pixel data)
+            // But since we track drawing state, we can use a flag or check if canvas is blank
+            const canvas = document.getElementById('signature-pad');
+            const blank = document.createElement('canvas');
+            blank.width = canvas.width;
+            blank.height = canvas.height;
+            const isSignatureEmpty = canvas.toDataURL() === blank.toDataURL();
+
+            let missingFields = [];
+            if (!name) missingFields.push(isArabic ? "اسم الموظف" : "Employee Name");
+            if (!passport) missingFields.push(isArabic ? "رقم الجواز" : "Passport No");
+            if (!nationality) missingFields.push(isArabic ? "الجنسية" : "Nationality");
+            if (!jobTitle) missingFields.push(isArabic ? "المسمى الوظيفي" : "Job Title");
+            if (!workerName) missingFields.push(isArabic ? "اسم العامل (تحت التوقيع)" : "Worker Name (under signature)");
+            if (isSignatureEmpty) missingFields.push(isArabic ? "التوقيع" : "Signature");
+
+            if (missingFields.length > 0) {
+                alert((isArabic ? "يرجى تعبئة الحقول الإلزامية التالية:\n" : "Please fill in the following mandatory fields:\n") + missingFields.join("\n"));
+            } else {
+                window.print();
             }
         }
 
