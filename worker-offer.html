@@ -739,8 +739,11 @@
         });
 
         // QR Code
+        // Use the current page URL or a specific verification URL
+        // If hosted, this will open the actual website
+        const currentUrl = window.location.href;
         new QRCode(document.getElementById("qrcode"), {
-            text: "Offer Letter Ref: " + refId + " | Nova Niles Technical Services",
+            text: currentUrl + "?ref=" + refId, // Appending refId as query param for tracking/verification
             width: 80, height: 80
         });
     </script>

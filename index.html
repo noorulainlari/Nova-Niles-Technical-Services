@@ -437,8 +437,10 @@
         document.getElementById('ref-id').textContent = refId;
 
         // Generate QR Code
+        // Use the current page URL or a specific verification URL
+        const currentUrl = window.location.href;
         new QRCode(document.getElementById("qrcode"), {
-            text: "Verified Document: " + refId + " | Nova Niles Technical Services",
+            text: currentUrl + "?ref=" + refId, // Appending refId makes it unique and opens the site
             width: 80,
             height: 80,
             colorDark : "#000000",
