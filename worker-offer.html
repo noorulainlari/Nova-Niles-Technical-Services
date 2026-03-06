@@ -237,7 +237,7 @@
 
     <div class="content">
         <div class="candidate-info">
-            <p><strong>Date:</strong> <span id="current-date"></span></p>
+            <p><strong>Date:</strong> <input type="date" id="offer-date" class="input-field"></p>
             <p><strong>Employee Name:</strong> <input type="text" class="input-field" placeholder="Enter Name"></p>
             <p><strong>Passport No:</strong> <input type="text" class="input-field" placeholder="Enter Passport No"></p>
             <p><strong>Nationality:</strong> <input type="text" class="input-field" placeholder="Enter Nationality"></p>
@@ -350,8 +350,8 @@
     </div>
 
     <script>
-        // Set date
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        // Set date to today by default
+        document.getElementById('offer-date').valueAsDate = new Date();
         
         // Ref ID
         const refId = 'OL-' + Date.now().toString().slice(-6);
@@ -395,6 +395,7 @@
 
         function validateAndPrint() {
             // Get all input fields
+            const date = document.getElementById('offer-date').value;
             const name = document.querySelector('.candidate-info input[placeholder="Enter Name"]').value.trim();
             const passport = document.querySelector('.candidate-info input[placeholder="Enter Passport No"]').value.trim();
             const nationality = document.querySelector('.candidate-info input[placeholder="Enter Nationality"]').value.trim();
@@ -411,6 +412,7 @@
             const isSignatureEmpty = canvas.toDataURL() === blank.toDataURL() && !uploadedImage;
 
             let missingFields = [];
+            if (!date) missingFields.push(isArabic ? "التاريخ" : "Date");
             if (!name) missingFields.push(isArabic ? "اسم الموظف" : "Employee Name");
             if (!passport) missingFields.push(isArabic ? "رقم الجواز" : "Passport No");
             if (!nationality) missingFields.push(isArabic ? "الجنسية" : "Nationality");
