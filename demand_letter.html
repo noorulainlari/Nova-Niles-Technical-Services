@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Demand Letter</title>
+    <style>
+        body {
+            font-family: "Times New Roman", serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        /* Header Logo */
+        .header-logo {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 80px;
+            height: auto;
+        }
+        .header h1 {
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .header p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .content {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .recipient-info {
+            margin-bottom: 20px;
+        }
+        .subject {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center;
+        }
+        .terms {
+            margin-top: 20px;
+        }
+        .terms ol {
+            padding-left: 20px;
+        }
+        .terms li {
+            margin-bottom: 5px;
+        }
+        .footer {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-box {
+            text-align: center;
+            position: relative;
+            min-width: 200px;
+        }
+        .signature-line {
+            margin-top: 60px;
+            border-top: 1px solid #000;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Stamp */
+        .stamp-img {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            width: 120px;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .print-btn:hover {
+            background-color: #45a049;
+        }
+        @media print {
+            body {
+                padding: 0;
+                max-width: 100%;
+            }
+            .no-print, .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Watermark Background -->
+    <img src="logo.svg" alt="Watermark" class="watermark">
+
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+
+    <div class="header" contenteditable="true">
+        <!-- Optional: Header Logo (uncomment if needed, or user can drag/drop) -->
+        <!-- <img src="logo.svg" class="header-logo"> -->
+        <h1>Nova Niles Technical Services</h1>
+        <p>[Your Company Address, PO Box, City, UAE]</p>
+        <p>Tel: [Phone Number] | Email: [Email Address]</p>
+    </div>
+
+    <div class="content">
+        <div class="recipient-info" contenteditable="true">
+            <p><strong>Date:</strong> <span id="current-date"></span></p>
+            <p><strong>To:</strong><br>
+            [Recruitment Agency Name]<br>
+            [Agency Address]<br>
+            [City, Country]</p>
+        </div>
+
+        <p class="subject" contenteditable="true">SUBJECT: DEMAND LETTER FOR RECRUITMENT OF WORKERS</p>
+
+        <p contenteditable="true">Dear Sir/Madam,</p>
+
+        <p contenteditable="true">We, <strong>[YOUR COMPANY NAME]</strong>, organized under the laws of the United Arab Emirates, hereby appoint your agency to recruit the following personnel for employment with our company in the UAE, under the following terms and conditions:</p>
+
+        <table contenteditable="true">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Position / Category</th>
+                    <th>Quantity</th>
+                    <th>Monthly Salary (AED)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Helper</td>
+                    <td>20</td>
+                    <td>1,000</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Mason</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Carpenter</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Shuttering Carpenter</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Plumber</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Steel Fitter</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Duct Man</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Aluminium Fitters</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Block Mason</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Tile Mason</td>
+                    <td>20</td>
+                    <td>1,200</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right; font-weight: bold;">Total</td>
+                    <td>200</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="terms" contenteditable="true">
+            <h3>Terms and Conditions:</h3>
+            <ol>
+                <li><strong>Contract Period:</strong> 2 (Two) Years, renewable upon mutual agreement.</li>
+                <li><strong>Kitchen Facility:</strong> Provided by the company.</li>
+                <li><strong>Salary Hold:</strong> 40 days salary will be held as a security deposit and refunded upon successful completion of the two-year contract.</li>
+                <li><strong>Conduct:</strong> Alcohol consumption is strictly prohibited on company premises/accommodation. Violations will result in fines or disciplinary action.</li>
+                <li><strong>Uniform:</strong> Employees are required to wear the company-provided uniform during working hours.</li>
+                <li><strong>Work Performance:</strong> Refusal to work or perform assigned duties may result in visa cancellation.</li>
+                <li><strong>Accommodation:</strong> Provided by the company.</li>
+                <li><strong>Transportation:</strong> Provided by the company (from accommodation to work site and back).</li>
+                <li><strong>Leave & Air Ticket:</strong> 60 days paid leave after completion of 2 years of service, with a round-trip air ticket provided by the company.</li>
+                <li><strong>Other Benefits:</strong> Medical insurance, overtime, and other benefits as per UAE Labor Law.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="footer" contenteditable="true">
+        <div class="signature-box">
+            <!-- Stamp Image -->
+            <img src="stamp.svg" class="stamp-img" alt="Stamp">
+            <p>For and on behalf of<br><strong>Nova Niles Technical Services</strong></p>
+            <div class="signature-line"></div>
+            <p>Authorized Signatory<br>(Name & Designation)</p>
+        </div>
+        <div class="signature-box">
+            <p>Accepted by<br><strong>[AGENCY NAME]</strong></p>
+            <div class="signature-line"></div>
+            <p>Authorized Signatory<br>(Name & Seal)</p>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+    </script>
+
+</body>
+</html>
