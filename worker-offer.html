@@ -336,6 +336,7 @@
     </div>
 
     <div class="footer-note" style="text-align: center; margin-top: 40px; font-size: 12px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <p>Please sign, print, and email this document to: <strong>info.novaniles-TS@gmail.com, ksbpstech@gmail.com</strong></p>
         <div id="qrcode" class="qr-code-container"></div>
         <p class="qr-code-container">Scan to Verify Offer Authenticity</p>
     </div>
@@ -465,6 +466,7 @@
                 accept: "I accept this offer",
                 workerNamePlaceholder: "Worker Name",
                 clearBtn: "Clear Signature",
+                footerEmail: "Please sign, print, and email this document to:",
                 footerNote: "Scan to Verify Offer Authenticity",
                 placeholders: {
                     name: "Enter Name",
@@ -524,6 +526,7 @@
                 accept: "أوافق على هذا العرض",
                 workerNamePlaceholder: "اسم العامل",
                 clearBtn: "مسح التوقيع",
+                footerEmail: "يرجى التوقيع والطباعة وإرسال هذا المستند عبر البريد الإلكتروني إلى:",
                 footerNote: "امسح للتحقق من صحة العرض",
                 placeholders: {
                     name: "أدخل الاسم",
@@ -626,6 +629,7 @@
             sigBoxes[1].querySelector('input').placeholder = t.workerNamePlaceholder;
             
             document.querySelector('.clear-btn').textContent = t.clearBtn;
+            document.querySelector('.footer-note p:first-child strong').previousSibling.nodeValue = t.footerEmail + " ";
             document.querySelector('.footer-note p:last-child').textContent = t.footerNote;
         }
 
