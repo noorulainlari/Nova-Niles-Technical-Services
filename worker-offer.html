@@ -300,9 +300,172 @@
 
         // Update candidate name in body
         const nameInput = document.querySelector('.candidate-info input[placeholder="Enter Name"]');
+        const candidateNameDisplay = document.getElementById('candidate-name-display');
+        
         nameInput.addEventListener('input', function() {
-            document.getElementById('candidate-name-display').textContent = this.value || "[Candidate Name]";
+            candidateNameDisplay.textContent = this.value || (isArabic ? "[اسم المرشح]" : "[Candidate Name]");
         });
+
+        // Language Toggle Logic
+        let isArabic = false;
+        const translations = {
+            en: {
+                title: "EMPLOYMENT OFFER LETTER",
+                date: "Date:",
+                empName: "Employee Name:",
+                passport: "Passport No:",
+                nationality: "Nationality:",
+                dear: "Dear Mr./Ms. ",
+                bodyStart: "We are pleased to offer you employment with <strong>NOVA NILES TECHNICAL SERVICES</strong> in the position of ",
+                bodyEnd: " under the following terms and conditions:",
+                table: {
+                    basic: "Basic Salary",
+                    allowance: "Allowances",
+                    total: "Total Monthly Salary"
+                },
+                termsTitle: "Terms and Conditions:",
+                terms: [
+                    "<strong>Contract Period:</strong> 2 (Two) Years, renewable upon mutual agreement.",
+                    "<strong>Working Hours:</strong> 9 hours per day (including 1 hour break).",
+                    "<strong>Overtime:</strong> As per UAE Labor Law.",
+                    "<strong>Probation Period:</strong> 6 Months.",
+                    "<strong>Accommodation & Transport:</strong> Provided by the company.",
+                    "<strong>Medical Insurance:</strong> Provided by the company.",
+                    "<strong>Leave & Ticket:</strong> Every 2 years with return ticket.",
+                    "<strong>Notice Period:</strong> 30 Days as per UAE Law."
+                ],
+                companyName: "NOVA NILES TECHNICAL SERVICES",
+                companyNameAr: "نوفا نايلز للخدمات الفنية",
+                forBehalf: "For and on behalf of",
+                empSig: "Employee Signature",
+                accept: "I accept this offer",
+                clearBtn: "Clear Signature",
+                footerNote: "Scan to Verify Offer Authenticity",
+                placeholders: {
+                    name: "Enter Name",
+                    passport: "Enter Passport No",
+                    nationality: "Enter Nationality",
+                    job: "Job Title",
+                    salary: "e.g. 900",
+                    allowance: "e.g. 200",
+                    total: "e.g. 1100"
+                },
+                candidatePlaceholder: "[Candidate Name]"
+            },
+            ar: {
+                title: "عرض عمل",
+                date: "التاريخ:",
+                empName: "اسم الموظف:",
+                passport: "رقم الجواز:",
+                nationality: "الجنسية:",
+                dear: "عزيزي السيد / السيدة ",
+                bodyStart: "يسرنا أن نعرض عليك العمل مع <strong>نوفا نايلز للخدمات الفنية</strong> في وظيفة ",
+                bodyEnd: " وفقاً للشروط والأحكام التالية:",
+                table: {
+                    basic: "الراتب الأساسي",
+                    allowance: "البدلات",
+                    total: "إجمالي الراتب الشهري"
+                },
+                termsTitle: "الشروط والأحكام:",
+                terms: [
+                    "<strong>مدة العقد:</strong> سنتان (2)، قابلة للتجديد بموافقة الطرفين.",
+                    "<strong>ساعات العمل:</strong> 9 ساعات يومياً (شاملة ساعة استراحة).",
+                    "<strong>العمل الإضافي:</strong> وفقاً لقانون العمل الإماراتي.",
+                    "<strong>فترة التجربة:</strong> 6 أشهر.",
+                    "<strong>السكن والمواصلات:</strong> توفرها الشركة.",
+                    "<strong>التأمين الطبي:</strong> توفره الشركة.",
+                    "<strong>الإجازة والتذكرة:</strong> كل سنتين مع تذكرة عودة.",
+                    "<strong>فترة الإشعار:</strong> 30 يوماً وفقاً لقانون العمل الإماراتي."
+                ],
+                companyName: "NOVA NILES TECHNICAL SERVICES",
+                companyNameAr: "نوفا نايلز للخدمات الفنية",
+                forBehalf: "عن وبالنيابة عن",
+                empSig: "توقيع الموظف",
+                accept: "أوافق على هذا العرض",
+                clearBtn: "مسح التوقيع",
+                footerNote: "امسح للتحقق من صحة العرض",
+                placeholders: {
+                    name: "أدخل الاسم",
+                    passport: "أدخل رقم الجواز",
+                    nationality: "أدخل الجنسية",
+                    job: "المسمى الوظيفي",
+                    salary: "مثلاً 900",
+                    allowance: "مثلاً 200",
+                    total: "مثلاً 1100"
+                },
+                candidatePlaceholder: "[اسم المرشح]"
+            }
+        };
+
+        function toggleLanguage() {
+            isArabic = !isArabic;
+            const lang = isArabic ? 'ar' : 'en';
+            const t = translations[lang];
+            
+            document.body.className = isArabic ? 'rtl' : '';
+            document.querySelector('.lang-btn').textContent = isArabic ? 'English / عربي' : 'عربي / English';
+
+            // Header
+            document.querySelector('.header h1').textContent = t.title;
+
+            // Candidate Info
+            const infoPs = document.querySelectorAll('.candidate-info p');
+            infoPs[0].querySelector('strong').textContent = t.date;
+            infoPs[1].querySelector('strong').textContent = t.empName;
+            infoPs[2].querySelector('strong').textContent = t.passport;
+            infoPs[3].querySelector('strong').textContent = t.nationality;
+
+            document.querySelector('.candidate-info input[placeholder="Enter Name"]').placeholder = t.placeholders.name;
+            document.querySelector('.candidate-info input[placeholder="Enter Passport No"]').placeholder = t.placeholders.passport;
+            document.querySelector('.candidate-info input[placeholder="Enter Nationality"]').placeholder = t.placeholders.nationality;
+
+            // Body
+            const bodyPs = document.querySelectorAll('.content > p');
+            bodyPs[0].childNodes[0].nodeValue = t.dear;
+            
+            // Update candidate name display placeholder if empty
+            if (!nameInput.value) {
+                candidateNameDisplay.textContent = t.candidatePlaceholder;
+            }
+
+            // Complex body replacement while preserving input
+            const jobInput = document.querySelector('input[placeholder="Job Title"]');
+            const p2 = bodyPs[1];
+            p2.innerHTML = t.bodyStart + '<strong><input type="text" class="input-field" style="width: 150px;" placeholder="' + t.placeholders.job + '"></strong>' + t.bodyEnd;
+            // Restore input value
+            const newJobInput = p2.querySelector('input');
+            newJobInput.value = jobInput.value;
+
+            // Table
+            const ths = document.querySelectorAll('table th');
+            const tds = document.querySelectorAll('table td');
+            ths[0].textContent = t.table.basic;
+            ths[1].textContent = t.table.allowance;
+            ths[2].textContent = t.table.total;
+
+            tds[0].querySelector('input').placeholder = t.placeholders.salary;
+            tds[1].querySelector('input').placeholder = t.placeholders.allowance;
+            tds[2].querySelector('input').placeholder = t.placeholders.total;
+
+            // Terms
+            document.querySelector('.terms h3').textContent = t.termsTitle;
+            const lis = document.querySelectorAll('.terms li');
+            t.terms.forEach((term, index) => {
+                if(lis[index]) lis[index].innerHTML = term;
+            });
+
+            // Footer
+            const sigBoxes = document.querySelectorAll('.signature-box');
+            // Company Sig
+            sigBoxes[0].querySelector('p').innerHTML = t.forBehalf + '<br><strong>' + t.companyName + '</strong>';
+            
+            // Employee Sig
+            const empSigP = sigBoxes[1].querySelector('p');
+            empSigP.innerHTML = '<strong>' + t.empSig + '</strong><br>' + t.accept;
+            
+            document.querySelector('.clear-btn').textContent = t.clearBtn;
+            document.querySelector('.footer-note p:last-child').textContent = t.footerNote;
+        }
 
         // Signature Pad
         const canvas = document.getElementById('signature-pad');
