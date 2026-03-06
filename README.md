@@ -4,7 +4,7 @@ This is a professional **Job Demand Letter** template tailored for UAE-based com
 
 ## How to Use
 
-1. **Open the Template**: Double-click on `demand_letter.html` to open it in your web browser (Chrome, Edge, Firefox, etc.).
+1. **Open the Template**: Double-click on `index.html` to open it in your web browser (Chrome, Edge, Firefox, etc.).
 2. **Edit the Content**:
    - The template is **fully editable**. Click directly on any text (e.g., `[YOUR COMPANY NAME]`, `[Recruitment Agency Name]`) to type your own details.
    - You can update the **Job Positions Table**, **Salaries**, and **Quantities** directly in the browser.
@@ -22,4 +22,4 @@ This is a professional **Job Demand Letter** template tailored for UAE-based com
 - **Auto-Date**: The current date is automatically filled in (but you can change it).
 
 ## Customization
-If you need to make permanent changes to the structure (e.g., adding a logo image), you can edit the `demand_letter.html` file in a text editor like Notepad or VS Code.
+If you need to make permanent changes to the structure (e.g., adding a logo image), you can edit the `index.html` file in a text editor like Notepad or VS Code.
