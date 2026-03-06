@@ -144,6 +144,26 @@
         .print-btn:hover {
             background-color: #45a049;
         }
+
+        .lang-btn {
+            padding: 8px 15px;
+            background-color: #102580;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-btn {
+            padding: 8px 15px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
         
         /* Signature Pad Styles */
         .signature-pad-container {
@@ -190,6 +210,10 @@
 </head>
 <body>
     <img src="logo.svg" alt="Watermark" class="watermark">
+    <div class="nav-buttons no-print" style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px;">
+        <button onclick="window.location.href='index.html'" class="nav-btn">&larr; Demand Letter</button>
+        <button onclick="toggleLanguage()" class="lang-btn">عربي / English</button>
+    </div>
     <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
 
     <div class="header">
@@ -199,7 +223,7 @@
         </div>
         <h1>EMPLOYMENT OFFER LETTER</h1>
         <p><strong>NOVA NILES TECHNICAL SERVICES</strong></p>
-        <p>P.O. Box: 12345, Dubai - UAE</p>
+        <p>P.O. Box: 45772, Dubai - UAE</p>
     </div>
 
     <div class="content">

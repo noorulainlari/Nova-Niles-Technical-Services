@@ -138,11 +138,18 @@
         }
         
         .lang-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             padding: 8px 15px;
             background-color: #102580;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-btn {
+            padding: 8px 15px;
+            background-color: #333;
             color: white;
             border: none;
             border-radius: 5px;
@@ -230,8 +237,11 @@
     <!-- Watermark Background -->
     <img src="logo.svg" alt="Watermark" class="watermark">
 
-    <button onclick="toggleLanguage()" class="lang-btn no-print">عربي / English</button>
-    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    <div class="nav-buttons no-print" style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px;">
+        <button onclick="window.location.href='worker-offer.html'" class="nav-btn">Worker Offer Letter &rarr;</button>
+        <button onclick="toggleLanguage()" class="lang-btn">عربي / English</button>
+    </div>
+    <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
 
     <div class="header" contenteditable="true">
         <div class="header-top">
@@ -240,7 +250,7 @@
         </div>
         <h1>DEMAND LETTER</h1>
         <p><strong>NOVA NILES TECHNICAL SERVICES</strong></p>
-        <p>P.O. Box: 12345, Dubai - UAE</p>
+        <p>P.O. Box: 45772, Dubai - UAE</p>
         <p>Email: info.novaniles-TS@gmail.com | ksbpstech@gmail.com</p>
     </div>
 
