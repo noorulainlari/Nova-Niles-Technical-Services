@@ -66,9 +66,23 @@
             border: 1px solid #ccc;
             padding: 15px;
             background-color: #f9f9f9;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .candidate-info {
+                grid-template-columns: 1fr;
+            }
         }
         .candidate-info p {
             margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .candidate-info p strong {
+            width: 140px;
+            display: inline-block;
         }
         .input-field {
             border: none;
@@ -76,7 +90,7 @@
             background: transparent;
             font-family: inherit;
             font-size: inherit;
-            width: 200px;
+            width: 100%;
             font-weight: bold;
         }
         select.input-field {
@@ -239,8 +253,10 @@
         <div class="candidate-info">
             <p><strong>Date:</strong> <input type="date" id="offer-date" class="input-field"></p>
             <p><strong>Employee Name:</strong> <input type="text" class="input-field" placeholder="Enter Name"></p>
-            <p><strong>Passport No:</strong> <input type="text" class="input-field" placeholder="Enter Passport No"></p>
             <p><strong>Nationality:</strong> <input type="text" class="input-field" placeholder="Enter Nationality"></p>
+            <p><strong>Passport No:</strong> <input type="text" class="input-field" placeholder="Enter Passport No"></p>
+            <p><strong>Passport Expiry:</strong> <input type="date" id="passport-expiry" class="input-field"></p>
+            <p><strong>Date of Birth:</strong> <input type="date" id="dob" class="input-field"></p>
         </div>
 
         <p>Dear Mr./Ms. <span id="candidate-name-display">[Candidate Name]</span>,</p>
@@ -292,6 +308,8 @@
                 <li><strong>Accommodation:</strong> Provided by the company.</li>
                 <li><strong>Transportation:</strong> Provided by the company (from accommodation to work site and back).</li>
                 <li><strong>Leave & Air Ticket:</strong> 60 days paid leave after completion of 2 years of service, with a round-trip air ticket provided by the company.</li>
+                <li><strong>Medical & Security Clearance:</strong> Employment is subject to passing the medical examination and obtaining necessary security clearances/visa from UAE authorities.</li>
+                <li><strong>Offer Validity:</strong> This offer is valid for acceptance for a period of 15 days from the date of issuance.</li>
                 <li><strong>Other Benefits:</strong> Medical insurance, overtime, and other benefits as per UAE Labor Law.</li>
             </ol>
         </div>
@@ -397,8 +415,10 @@
             // Get all input fields
             const date = document.getElementById('offer-date').value;
             const name = document.querySelector('.candidate-info input[placeholder="Enter Name"]').value.trim();
-            const passport = document.querySelector('.candidate-info input[placeholder="Enter Passport No"]').value.trim();
             const nationality = document.querySelector('.candidate-info input[placeholder="Enter Nationality"]').value.trim();
+            const passport = document.querySelector('.candidate-info input[placeholder="Enter Passport No"]').value.trim();
+            const passportExpiry = document.getElementById('passport-expiry').value;
+            const dob = document.getElementById('dob').value;
             const jobTitle = document.getElementById('job-title-select').value;
             const workerName = document.querySelector('.signature-box input[placeholder="Worker Name"]').value.trim();
             
@@ -414,8 +434,10 @@
             let missingFields = [];
             if (!date) missingFields.push(isArabic ? "التاريخ" : "Date");
             if (!name) missingFields.push(isArabic ? "اسم الموظف" : "Employee Name");
-            if (!passport) missingFields.push(isArabic ? "رقم الجواز" : "Passport No");
             if (!nationality) missingFields.push(isArabic ? "الجنسية" : "Nationality");
+            if (!passport) missingFields.push(isArabic ? "رقم الجواز" : "Passport No");
+            if (!passportExpiry) missingFields.push(isArabic ? "تاريخ انتهاء الجواز" : "Passport Expiry");
+            if (!dob) missingFields.push(isArabic ? "تاريخ الميلاد" : "Date of Birth");
             if (!jobTitle) missingFields.push(isArabic ? "المسمى الوظيفي" : "Job Title");
             if (!workerName) missingFields.push(isArabic ? "اسم العامل (تحت التوقيع)" : "Worker Name (under signature)");
             if (isSignatureEmpty) missingFields.push(isArabic ? "التوقيع" : "Signature");
@@ -434,8 +456,10 @@
                 title: "EMPLOYMENT OFFER LETTER",
                 date: "Date:",
                 empName: "Employee Name:",
-                passport: "Passport No:",
                 nationality: "Nationality:",
+                passport: "Passport No:",
+                passportExpiry: "Passport Expiry:",
+                dob: "Date of Birth:",
                 dear: "Dear Mr./Ms. ",
                 bodyStart: "We are pleased to offer you employment with <strong>NOVA NILES TECHNICAL SERVICES</strong> in the position of ",
                 bodyEnd: " under the following terms and conditions:",
@@ -497,8 +521,10 @@
                 title: "عرض عمل",
                 date: "التاريخ:",
                 empName: "اسم الموظف:",
-                passport: "رقم الجواز:",
                 nationality: "الجنسية:",
+                passport: "رقم الجواز:",
+                passportExpiry: "تاريخ انتهاء الجواز:",
+                dob: "تاريخ الميلاد:",
                 dear: "عزيزي السيد / السيدة ",
                 bodyStart: "يسرنا أن نعرض عليك العمل مع <strong>نوفا نايلز للخدمات الفنية</strong> في وظيفة ",
                 bodyEnd: " وفقاً للشروط والأحكام التالية:",
@@ -573,8 +599,10 @@
             const infoPs = document.querySelectorAll('.candidate-info p');
             infoPs[0].querySelector('strong').textContent = t.date;
             infoPs[1].querySelector('strong').textContent = t.empName;
-            infoPs[2].querySelector('strong').textContent = t.passport;
-            infoPs[3].querySelector('strong').textContent = t.nationality;
+            infoPs[2].querySelector('strong').textContent = t.nationality;
+            infoPs[3].querySelector('strong').textContent = t.passport;
+            infoPs[4].querySelector('strong').textContent = t.passportExpiry;
+            infoPs[5].querySelector('strong').textContent = t.dob;
 
             document.querySelector('.candidate-info input[placeholder="Enter Name"]').placeholder = t.placeholders.name;
             document.querySelector('.candidate-info input[placeholder="Enter Passport No"]').placeholder = t.placeholders.passport;
