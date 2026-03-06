@@ -1,0 +1,1 @@
+Adjust stamp position to reduce overlap and improve visibility
