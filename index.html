@@ -130,12 +130,65 @@
         .print-btn:hover {
             background-color: #45a049;
         }
+        
+        /* Signature Pad Styles */
+        .signature-pad-container {
+            border: 1px dashed #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            cursor: crosshair;
+        }
+        .signature-actions {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .clear-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .agency-input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-family: inherit;
+            text-align: center;
+            font-weight: bold;
+        }
+
         @media print {
             body {
                 padding: 0;
                 max-width: 100%;
             }
-            .no-print, .print-btn {
+            .no-print, .print-btn, .signature-actions, .signature-pad-container {
+                border: none; 
+                background: none;
+            }
+            .signature-pad-container {
+                border: none;
+                background: none;
+                padding: 0;
+            }
+            canvas {
+                border: none;
+            }
+            .agency-input {
+                border: none;
+                background: none;
+                padding: 0;
+            }
+            .clear-btn {
                 display: none;
             }
         }
@@ -252,6 +305,8 @@
             <h3>Terms and Conditions:</h3>
             <ol>
                 <li><strong>Contract Period:</strong> 2 (Two) Years, renewable upon mutual agreement.</li>
+                <li><strong>Working Hours:</strong> 9 hours per day (including 1 hour break).</li>
+                <li><strong>Overtime:</strong> Any work performed beyond normal working hours will be paid as overtime as per UAE Labor Law.</li>
                 <li><strong>Kitchen Facility:</strong> Provided by the company.</li>
                 <li><strong>Salary Hold:</strong> 40 days salary will be held as a security deposit and refunded upon successful completion of the two-year contract.</li>
                 <li><strong>Conduct:</strong> Alcohol consumption is strictly prohibited on company premises/accommodation. Violations will result in fines or disciplinary action.</li>
@@ -271,11 +326,17 @@
             <img src="stamp.svg" class="stamp-img" alt="Stamp">
             <p>For and on behalf of<br><strong>Nova Niles Technical Services</strong></p>
             <div class="signature-line"></div>
-            <p>Authorized Signatory<br>(Name & Designation)</p>
         </div>
         <div class="signature-box">
-            <p>Accepted by<br><strong>(Agency Stamp)</strong></p>
-            <div class="signature-line"></div>
+            <p>Accepted by<br>
+                <input type="text" class="agency-input" placeholder="Type Agency Name Here">
+            </p>
+            <div class="signature-pad-container">
+                <canvas id="signature-pad" width="200" height="100"></canvas>
+                <div class="signature-actions">
+                    <button class="clear-btn" onclick="clearSignature()">Clear Signature</button>
+                </div>
+            </div>
             <p>Authorized Signatory<br>(Name & Seal)</p>
         </div>
     </div>
@@ -284,6 +345,71 @@
         // Set current date
         const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+
+        // Signature Pad Logic
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            // Get correct coordinates for both mouse and touch
+            let clientX, clientY;
+            if(e.type.includes('touch')) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            lastX = x;
+            lastY = y;
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            lastX = touch.clientX - rect.left;
+            lastY = touch.clientY - rect.top;
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); 
+            draw(e);
+        }, { passive: false });
+        
+        canvas.addEventListener('touchend', () => isDrawing = false);
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
     </script>
 
 </body>
