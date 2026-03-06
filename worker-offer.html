@@ -335,6 +335,10 @@
                 <div class="signature-actions">
                     <button class="clear-btn" onclick="clearSignature()">Clear Signature</button>
                 </div>
+                <div class="upload-actions no-print" style="margin-top: 5px;">
+                    <p style="font-size: 10px; margin: 2px;">OR Upload Signature Image</p>
+                    <input type="file" id="signature-upload" accept="image/*" style="font-size: 10px;">
+                </div>
             </div>
         </div>
     </div>
@@ -403,7 +407,8 @@
             const blank = document.createElement('canvas');
             blank.width = canvas.width;
             blank.height = canvas.height;
-            const isSignatureEmpty = canvas.toDataURL() === blank.toDataURL();
+            // Check if blank OR uploaded image is present
+            const isSignatureEmpty = canvas.toDataURL() === blank.toDataURL() && !uploadedImage;
 
             let missingFields = [];
             if (!name) missingFields.push(isArabic ? "اسم الموظف" : "Employee Name");
@@ -472,6 +477,7 @@
                 accept: "I accept this offer",
                 workerNamePlaceholder: "Worker Name",
                 clearBtn: "Clear Signature",
+                uploadText: "OR Upload Signature Image",
                 footerEmail: "Please sign, print, and email this document to:",
                 footerNote: "Scan to Verify Offer Authenticity",
                 placeholders: {
@@ -534,6 +540,7 @@
                 accept: "أوافق على هذا العرض",
                 workerNamePlaceholder: "اسم العامل",
                 clearBtn: "مسح التوقيع",
+                uploadText: "أو قم بتحميل صورة التوقيع",
                 footerEmail: "يرجى التوقيع والطباعة وإرسال هذا المستند عبر البريد الإلكتروني إلى:",
                 footerNote: "امسح للتحقق من صحة العرض",
                 placeholders: {
@@ -637,6 +644,7 @@
             sigBoxes[1].querySelector('input').placeholder = t.workerNamePlaceholder;
             
             document.querySelector('.clear-btn').textContent = t.clearBtn;
+            document.querySelector('.upload-actions p').textContent = t.uploadText;
             document.querySelector('.footer-note p:first-child strong').previousSibling.nodeValue = t.footerEmail + " ";
             document.querySelector('.footer-note p:last-child').textContent = t.footerNote;
         }
@@ -647,6 +655,7 @@
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
+        let uploadedImage = null;
 
         function draw(e) {
             if (!isDrawing) return;
@@ -670,7 +679,34 @@
         canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
         canvas.addEventListener('touchend', () => isDrawing = false);
 
-        function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearSignature() { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            uploadedImage = null;
+            document.getElementById('signature-upload').value = '';
+        }
+
+        // Signature Upload Logic
+        document.getElementById('signature-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Clear canvas first
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        // Draw image centered and scaled to fit
+                        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                        const x = (canvas.width / 2) - (img.width / 2) * scale;
+                        const y = (canvas.height / 2) - (img.height / 2) * scale;
+                        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                        uploadedImage = true;
+                    }
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
 
         // QR Code
         new QRCode(document.getElementById("qrcode"), {
